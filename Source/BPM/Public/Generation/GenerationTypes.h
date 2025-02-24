@@ -70,6 +70,36 @@ struct FRoomData
 
 	UPROPERTY(EditAnywhere)
 	ERoomType RoomType = ERoomType::Normal;
+
+	bool IsValid() const
+	{
+		return World != nullptr;
+	}
+};
+
+USTRUCT(BlueprintType)
+struct FRoomEntranceInfo
+{
+	GENERATED_BODY()
+
+	FRoomEntranceInfo()
+		: RoomEntranceSide(ERoomEntranceSide::North), RoomEntranceTransform(FTransform::Identity)
+	{}
+
+	FRoomEntranceInfo(const ERoomEntranceSide& InSide, const FTransform& InTransform)
+		: RoomEntranceSide(InSide), RoomEntranceTransform(InTransform)
+	{}
+
+	UPROPERTY(EditAnywhere)
+	ERoomEntranceSide RoomEntranceSide;
+
+	UPROPERTY(EditAnywhere)
+	FTransform RoomEntranceTransform;
+
+	bool operator==(const FRoomEntranceInfo& Other) const
+	{
+		return RoomEntranceSide == Other.RoomEntranceSide;
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -84,8 +114,16 @@ struct FRoomGenerationData
 	TMap<ERoomEntranceSide, FTransform> RoomEntrancesTransforms;
 
 	UPROPERTY(EditAnywhere)
+	TArray<FRoomEntranceInfo> RoomEntrancesInfo;
+
+	UPROPERTY(EditAnywhere)
 	FVector RoomBoundsOrigin;
 
 	UPROPERTY(EditAnywhere)
 	FVector RoomBoundsExtent;
+
+	bool IsValid() const
+	{
+		return RoomData.IsValid() && !RoomEntrancesTransforms.IsEmpty() && RoomBoundsExtent.Length() > 0.f;
+	}
 };

@@ -13,7 +13,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class BPM_API URoomGenerationDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
